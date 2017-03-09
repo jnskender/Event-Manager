@@ -35,12 +35,6 @@ def save_thank_you_letters(id, form_letter)
     end
 end
 
-def find_peak_hour(date)
-  hours = Hash.new(0)
-  hours[date.strftime('%l %p')] += 1
-  peak_hour = hours.max_by{|k,v| v}[0]
-  peak_hour
-end
 
 puts 'Event Manager Initialized!'
 
@@ -61,9 +55,11 @@ contents.each do |row|
     regtime = DateTime.strptime(row[:regdate], '%m/%d/%y %H:%M')
     hours[regtime.strftime('%l %p')] += 1
     days[regtime.strftime('%A')] += 1
-        #form_letter = erb_template.result(binding)
-        #save_thank_you_letters(id, form_letter)
+    form_letter = erb_template.result(binding)
+    save_thank_you_letters(id, form_letter)
 end
-    peak_hour = hours.max_by{|k,v| v}[0] #Find what time most registrations occurred
-    peak_day = days.max_by{|k,v| v}[0]
-    puts "#{peak_hour} #{peak_day}"
+
+peak_hour = hours.max_by { |_k, v| v }[0] # Find what time most registrations occurred
+peak_day = days.max_by { |_k, v| v }[0]
+
+puts "#{peak_hour} #{peak_day}"
